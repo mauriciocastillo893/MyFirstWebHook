@@ -7,15 +7,10 @@ pipeline {
                 git url: 'https://github.com/mauriciocastillo893/MyFirstWebHook.git', branch: 'main'
             }
         }
-        stage('Build') { 
-            agent {
-                docker {
-                    image 'my-nodejs-app:latest'
-                    reuseNode true
-                }
-            }
+        stage('Build') {
             steps {
-                echo "Building app using Docker Image" 
+                echo 'Building the NodeJSHelloWorld application using Docker image'
+                sh 'docker build -t nombre_imagen:tag .'
             }
         }
         stage('Deploy the Application') { 
