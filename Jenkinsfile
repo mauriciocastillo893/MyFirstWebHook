@@ -1,6 +1,20 @@
 pipeline {
     agent any
     stages {
+        stage('Identify and stop container') {
+            steps {
+                script {
+                    def containerId = sh(returnStdout: true, script: "sudo docker ps -q --filter \"publish=3000\"").trim()
+                    if (containerId) {
+                        sh "sudo docker stop $containerId"
+                        sh "sudo docker rm $containerId"
+                        echo "Container with ID $containerId stopped and removed."
+                    } else {
+                        echo "No container using port 3000 found."
+                    }
+                }
+            }
+        }
         stage('Clone the repo') {
             steps {
                 echo 'Cloning the repository:'
@@ -23,6 +37,7 @@ pipeline {
                 sh 'docker run -p 3000:3000 -d --name nodejs-hello-world nodejs-hello-world'
             }
 }
+
 
         // stage('Deploy') {
         //     steps {
