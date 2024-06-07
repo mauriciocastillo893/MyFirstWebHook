@@ -1,35 +1,22 @@
 pipeline {
     agent any
     stages {
-        stage('Checkout') {
+        stage('Clone the repo') {
             steps {
-                git url: 'https://github.com/mauriciocastillo893/MyFirstWebHook.git', branch: 'main'
+                echo 'Cloning the repository:'
+                git 'https://github.com/mauriciocastillo893/MyFirstWebHook.git', branch: 'main'
             }
         }
         stage('Build') {
             steps {
-                script {
-                    def app = docker.build("node-hello-world:latest")
-                }
-            }
-        }
-        stage('Test') {
-            steps {
-                script {
-                    docker.image("node-hello-world:latest").inside("-v ${env.WORKSPACE}/.npm:/root/.npm") {
-                        sh 'npm install'
-                        sh 'npm test'
-                    }
-                }
+                echo 'Building the NodeJSHelloWorld application on Docker'
+                sh 'docker build . -t nodejs-hello-world'
             }
         }
         stage('Deploy') {
             steps {
-                script {
-                    docker.image("node-hello-world:latest").inside {
-                        sh 'npm start'
-                    }
-                }
+                echo 'Deploying the application on Docker'
+                sh 'docker run -p 8000:8000 -d nodejs-hello-world'
             }
         }
     }
