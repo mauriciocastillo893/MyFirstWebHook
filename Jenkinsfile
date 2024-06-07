@@ -16,7 +16,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    docker.image("node-hello-world:latest").inside {
+                    docker.image("node-hello-world:latest").inside("-v ${env.WORKSPACE}/.npm:/root/.npm") {
                         sh 'npm install'
                         sh 'npm test'
                     }
