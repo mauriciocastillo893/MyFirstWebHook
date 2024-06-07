@@ -4,7 +4,7 @@ pipeline {
         stage('Clone the repo') {
             steps {
                 echo 'Cloning the repository:'
-                git 'https://github.com/mauriciocastillo893/MyFirstWebHook.git', branch: 'main'
+                git url: 'https://github.com/mauriciocastillo893/MyFirstWebHook.git', branch: 'main'
             }
         }
         stage('Build') {
